@@ -2,11 +2,424 @@
 
 exports[`Notifier default Testing Should match snapshot 1`] = `
 {
+  "Mappings": {
+    "ServiceprincipalMap": {
+      "af-south-1": {
+        "states": "states.af-south-1.amazonaws.com",
+      },
+      "ap-east-1": {
+        "states": "states.ap-east-1.amazonaws.com",
+      },
+      "ap-northeast-1": {
+        "states": "states.ap-northeast-1.amazonaws.com",
+      },
+      "ap-northeast-2": {
+        "states": "states.ap-northeast-2.amazonaws.com",
+      },
+      "ap-northeast-3": {
+        "states": "states.ap-northeast-3.amazonaws.com",
+      },
+      "ap-south-1": {
+        "states": "states.ap-south-1.amazonaws.com",
+      },
+      "ap-south-2": {
+        "states": "states.ap-south-2.amazonaws.com",
+      },
+      "ap-southeast-1": {
+        "states": "states.ap-southeast-1.amazonaws.com",
+      },
+      "ap-southeast-2": {
+        "states": "states.ap-southeast-2.amazonaws.com",
+      },
+      "ap-southeast-3": {
+        "states": "states.ap-southeast-3.amazonaws.com",
+      },
+      "ap-southeast-4": {
+        "states": "states.ap-southeast-4.amazonaws.com",
+      },
+      "ca-central-1": {
+        "states": "states.ca-central-1.amazonaws.com",
+      },
+      "cn-north-1": {
+        "states": "states.cn-north-1.amazonaws.com",
+      },
+      "cn-northwest-1": {
+        "states": "states.cn-northwest-1.amazonaws.com",
+      },
+      "eu-central-1": {
+        "states": "states.eu-central-1.amazonaws.com",
+      },
+      "eu-central-2": {
+        "states": "states.eu-central-2.amazonaws.com",
+      },
+      "eu-north-1": {
+        "states": "states.eu-north-1.amazonaws.com",
+      },
+      "eu-south-1": {
+        "states": "states.eu-south-1.amazonaws.com",
+      },
+      "eu-south-2": {
+        "states": "states.eu-south-2.amazonaws.com",
+      },
+      "eu-west-1": {
+        "states": "states.eu-west-1.amazonaws.com",
+      },
+      "eu-west-2": {
+        "states": "states.eu-west-2.amazonaws.com",
+      },
+      "eu-west-3": {
+        "states": "states.eu-west-3.amazonaws.com",
+      },
+      "il-central-1": {
+        "states": "states.il-central-1.amazonaws.com",
+      },
+      "me-central-1": {
+        "states": "states.me-central-1.amazonaws.com",
+      },
+      "me-south-1": {
+        "states": "states.me-south-1.amazonaws.com",
+      },
+      "sa-east-1": {
+        "states": "states.sa-east-1.amazonaws.com",
+      },
+      "us-east-1": {
+        "states": "states.us-east-1.amazonaws.com",
+      },
+      "us-east-2": {
+        "states": "states.us-east-2.amazonaws.com",
+      },
+      "us-gov-east-1": {
+        "states": "states.us-gov-east-1.amazonaws.com",
+      },
+      "us-gov-west-1": {
+        "states": "states.us-gov-west-1.amazonaws.com",
+      },
+      "us-iso-east-1": {
+        "states": "states.amazonaws.com",
+      },
+      "us-iso-west-1": {
+        "states": "states.amazonaws.com",
+      },
+      "us-isob-east-1": {
+        "states": "states.amazonaws.com",
+      },
+      "us-west-1": {
+        "states": "states.us-west-1.amazonaws.com",
+      },
+      "us-west-2": {
+        "states": "states.us-west-2.amazonaws.com",
+      },
+    },
+  },
   "Parameters": {
     "BootstrapVersion": {
       "Default": "/cdk-bootstrap/hnb659fds/version",
       "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
       "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "CloudFrontAccessLogRelocaterEventRule93FDF984": {
+      "Properties": {
+        "Description": "event rule.",
+        "EventPattern": {
+          "detail": {
+            "bucket": {
+              "name": [
+                {
+                  "Ref": "LogBucketCC3B17E8",
+                },
+              ],
+            },
+            "object": {
+              "key": [
+                {
+                  "wildcard": "origin-logs/*.gz",
+                },
+              ],
+            },
+          },
+          "detail-type": [
+            "Object Created",
+          ],
+          "source": [
+            "aws.s3",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Ref": "CloudFrontAccessLogRelocaterRelocatorStateMachine78752FE0",
+            },
+            "Id": "Target0",
+            "InputTransformer": {
+              "InputPathsMap": {
+                "f1": "$",
+              },
+              "InputTemplate": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "{"event":<f1>,"params":{"accessLogDestination":{"bucketName":"",
+                    {
+                      "Ref": "LogBucketCC3B17E8",
+                    },
+                    "","objectPrifix":"partitioning-log"}}}",
+                  ],
+                ],
+              },
+            },
+            "RoleArn": {
+              "Fn::GetAtt": [
+                "CloudFrontAccessLogRelocaterRelocatorStateMachineEventsRole19E08D58",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CloudFrontAccessLogRelocaterRelocatorStateMachine78752FE0": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "CloudFrontAccessLogRelocaterStateMachineRoleDefaultPolicy5BDB8856",
+        "CloudFrontAccessLogRelocaterStateMachineRoleBADDC791",
+      ],
+      "Properties": {
+        "DefinitionString": {
+          "Fn::Join": [
+            "",
+            [
+              "{"StartAt":"GetSourceBucketObject","States":{"GetSourceBucketObject":{"Type":"Pass","Comment":"Get Source Bucket Object Key with Split Object Key","ResultPath":"$.Result.Source","Parameters":{"BucketName.$":"$.event.detail.bucket.name","ObjectKey.$":"$.event.detail.object.key","SplitObjectLayers.$":"States.StringSplit($.event.detail.object.key, '/')"},"Next":"GetSourceSplitObjectsLength"},"GetSourceSplitObjectsLength":{"Type":"Pass","ResultPath":"$.Result.Source.SplitObjectLayer","Parameters":{"Length.$":"States.ArrayLength($.Result.Source.SplitObjectLayers)"},"Next":"GetSplitObjectFilenameIndex"},"GetSplitObjectFilenameIndex":{"Type":"Pass","ResultPath":"$.Result.Source.Target.SplitObjectLayer","Parameters":{"Index.$":"States.MathAdd($.Result.Source.SplitObjectLayer.Length, -1)"},"Next":"GetSourceFilename"},"GetSourceFilename":{"Type":"Pass","ResultPath":"$.Result.Source.Target.File","Parameters":{"Filename.$":"States.ArrayGetItem($.Result.Source.SplitObjectLayers, $.Result.Source.Target.SplitObjectLayer.Index)"},"Next":"GetLogFilenameAttribute"},"GetLogFilenameAttribute":{"Type":"Pass","ResultPath":"$.Result.Source.Target.File.Attribute","Parameters":{"DateHour.$":"States.ArrayGetItem(States.StringSplit($.Result.Source.Target.File.Filename, '.'), 1)","DistributionId.$":"States.ArrayGetItem(States.StringSplit($.Result.Source.Target.File.Filename, '.'), 0)"},"Next":"GetDateFromFilenameAttribute"},"GetDateFromFilenameAttribute":{"Type":"Pass","ResultPath":"$.Result.Date","Parameters":{"Year.$":"States.ArrayGetItem(States.StringSplit($.Result.Source.Target.File.Attribute.DateHour, '-'), 0)","Month.$":"States.ArrayGetItem(States.StringSplit($.Result.Source.Target.File.Attribute.DateHour, '-'), 1)","Day.$":"States.ArrayGetItem(States.StringSplit($.Result.Source.Target.File.Attribute.DateHour, '-'), 2)"},"Next":"CopyObjectTask"},"CopyObjectTask":{"Next":"DeleteObjectTask","Type":"Task","ResultPath":"$.Result.CopyObject","Resource":"arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":states:::aws-sdk:s3:copyObject","Parameters":{"CopySource.$":"States.Format('{}/{}', $.Result.Source.BucketName, $.Result.Source.ObjectKey)","Bucket":"",
+              {
+                "Ref": "LogBucketCC3B17E8",
+              },
+              "","Key.$":"States.Format('partitioning-log/{}/{}/{}/{}/{}', $.Result.Source.Target.File.Attribute.DistributionId, $.Result.Date.Year, $.Result.Date.Month, $.Result.Date.Day, $.Result.Source.Target.File.Filename)"}},"DeleteObjectTask":{"Next":"Succeed","Type":"Task","ResultPath":"$.Result.CopyObject","Resource":"arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":states:::aws-sdk:s3:deleteObject","Parameters":{"Bucket.$":"$.Result.Source.BucketName","Key.$":"$.Result.Source.ObjectKey"}},"Succeed":{"Type":"Succeed"}}}",
+            ],
+          ],
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "CloudFrontAccessLogRelocaterStateMachineRoleBADDC791",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::StepFunctions::StateMachine",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CloudFrontAccessLogRelocaterRelocatorStateMachineEventsRole19E08D58": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "events.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CloudFrontAccessLogRelocaterRelocatorStateMachineEventsRoleDefaultPolicyEA05869C": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "states:StartExecution",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "CloudFrontAccessLogRelocaterRelocatorStateMachine78752FE0",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CloudFrontAccessLogRelocaterRelocatorStateMachineEventsRoleDefaultPolicyEA05869C",
+        "Roles": [
+          {
+            "Ref": "CloudFrontAccessLogRelocaterRelocatorStateMachineEventsRole19E08D58",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CloudFrontAccessLogRelocaterStateMachineRoleBADDC791": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::FindInMap": [
+                    "ServiceprincipalMap",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    "states",
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:ListBucket",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::GetAtt": [
+                            "LogBucketCC3B17E8",
+                            "Arn",
+                          ],
+                        },
+                        "/*",
+                      ],
+                    ],
+                  },
+                },
+                {
+                  "Action": [
+                    "s3:PutObject",
+                    "s3:ListBucket",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::GetAtt": [
+                            "LogBucketCC3B17E8",
+                            "Arn",
+                          ],
+                        },
+                        "/*",
+                      ],
+                    ],
+                  },
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "copy-object-policy",
+          },
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "s3:DeleteObject",
+                    "s3:ListBucket",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::GetAtt": [
+                            "LogBucketCC3B17E8",
+                            "Arn",
+                          ],
+                        },
+                        "/*",
+                      ],
+                    ],
+                  },
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "delete-object-policy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CloudFrontAccessLogRelocaterStateMachineRoleDefaultPolicy5BDB8856": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:copyObject",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "LogBucketCC3B17E8",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "s3:deleteObject",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "LogBucketCC3B17E8",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CloudFrontAccessLogRelocaterStateMachineRoleDefaultPolicy5BDB8856",
+        "Roles": [
+          {
+            "Ref": "CloudFrontAccessLogRelocaterStateMachineRoleBADDC791",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LogBucketCC3B17E8": {
+      "DeletionPolicy": "Retain",
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
     },
   },
   "Rules": {
