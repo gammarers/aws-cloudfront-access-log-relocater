@@ -11,9 +11,9 @@ export interface AccessLogSource {
 
 // export enum PartitioningFormatType {
 //   /** yyyy/mm/dd */
-//   HIERARCHICAL_DATE_PARTITIONING_FORMAT,
+//   HIERARCHICAL_DATE_PARTITIONING_FORMAT, Default
 //   /** y=yyyy/m=mm/d=dd */
-//   KEY_VALUE_DATE_PARTITIONING_FORMAT,
+//   KEY_VALUE_DATE_PARTITIONING_FORMAT, Hive Type
 // }
 
 export interface AccessLogDestination {
@@ -32,7 +32,10 @@ export class CloudFrontAccessLogRelocater extends Construct {
     super(scope, id);
 
     // 👇 relocate state machine(bukect object copy & delete)
-    const machine = new RelocatorStateMachine(this, 'RelocatorStateMachine');
+    const machine = new RelocatorStateMachine(this, 'RelocatorStateMachine', {
+      accessLogSource: props.accessLogSource,
+      accessLogDestination: props.accessLogDestination,
+    });
 
     // 👇 access log created event catch rule
     new events.Rule(this, 'EventRule', {
