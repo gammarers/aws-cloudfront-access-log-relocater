@@ -16,19 +16,19 @@ This AWS CDK construct modifies the storage format of CloudFront logs in S3 to m
 #### install by npm
 
 ```shell
-npm install @gammarers/aws-rds-database-running-schedule-stack
+npm install @gammarers/aws-cloudfront-access-log-relocater
 ```
 
 #### install by yarn
 
 ```shell
-yarn add @gammarers/aws-rds-database-running-schedule-stack
+yarn add @gammarers/aws-cloudfront-access-log-relocater
 ```
 
 ## Example
 
 ```typescript
-import { CloudFrontAccessLogRelocater } from '@gammarer/aws-rds-database-running-schedule-stack';
+import { CloudFrontAccessLogRelocater } from '@gammarers/aws-cloudfront-access-log-relocater';
 
 declare const logBucket: s3.Bucket;
 
